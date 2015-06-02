@@ -1,0 +1,27 @@
+{
+  "name": "coding-challenge",
+  "version": "1.0.0",
+  "description": "Coding challange for tcog",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec test/**"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/davepies/weathr"
+  },
+  "author": "Dave Pisek",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davepies/weathr/issues"
+  },
+  "homepage": "https://github.com/davepies/weathr",
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "supertest": "^1.0.1"
+  },
+  "dependencies": {
+    "async": "^1.1.0",
+    "express": "^4.12.4"
+  }
+}
