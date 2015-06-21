@@ -1,43 +1,35 @@
 /* eslint-env node */
 'use strict';
 
-// dependencies
+// Dependencies
 // ======================================================================
 
-// make `.jsx` file requirable by node
-require('node-jsx').install();
-
-var path = require('path');
 var express = require('express');
-var renderer = require('react-engine');
-
 var app = module.exports = express();
 
-// express set up
+//Temp
+var getLatLon = require('./app/middlewares/getLatLon');
+
+// Express Set Up
 // ======================================================================
 
-var engine = renderer.server.create({
-  reactRoutes: path.join(__dirname, '/public/routes.jsx')
-});
+require('./config/setup')(app);
 
-app.engine('.jsx', engine);
-app.set('views', path.join(__dirname, '/public/views'));
-app.set('view engine', 'jsx');
-app.set('view', renderer.expressView);
-
-app.use(express.static(path.join(__dirname, '/public')));
-
-// routes
+// Routes
 // ======================================================================
 
-app.get('/weather/:location', function (req, res) {
-    res.render(req.url, {
-        title: 'React Engine Express Sample App',
-        name: 'Jordan',
-        location: req.params.location
-    });
-});
+app.get('/weather/:location',
+    getLatLon,
+    function (req, res, next) {
+        res.render(req.url, {
+            title: 'React Engine Express Sample App',
+            name: 'Jordan',
+            location: req.latLon
+        });
+    }
+);
 
+// 400
 app.use(function (req, res) {
     res.status(404)
        .render('404', {
@@ -45,6 +37,15 @@ app.use(function (req, res) {
             url: req.url
         });
 });
+
+// Error Handling
+app.use(function (err, req, res, next) {
+    console.log(err.stack);
+    res.status(500).send('Error ' + err.message);
+});
+
+// Start Server
+// ======================================================================
 
 var server = app.listen(3000, function () {
     var host = server.address().address;

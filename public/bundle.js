@@ -21083,7 +21083,7 @@ var Client = require('react-engine/lib/client');
 // Include all view files. Browerify doesn't do
 // this automatically as it can only operate on
 // static require statements.
-require('./views/404.jsx');require('./views/account.jsx');require('./views/app.jsx');require('./views/forecast.jsx');require('./views/layout.jsx');
+require('./views/404.jsx');require('./views/app.jsx');require('./views/forecast.jsx');require('./views/layout.jsx');
 
 // boot options
 var options = {
@@ -21102,7 +21102,7 @@ global.document.addEventListener('DOMContentLoaded', function onLoad() {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./routes.jsx":192,"./views/404.jsx":193,"./views/account.jsx":194,"./views/app.jsx":195,"./views/forecast.jsx":196,"./views/layout.jsx":197,"react-engine/lib/client":2}],192:[function(require,module,exports){
+},{"./routes.jsx":192,"./views/404.jsx":193,"./views/app.jsx":194,"./views/forecast.jsx":195,"./views/layout.jsx":196,"react-engine/lib/client":2}],192:[function(require,module,exports){
 /* eslint-env node */
 
 'use strict';
@@ -21120,7 +21120,7 @@ module.exports = (
 );
 
 
-},{"./views/app.jsx":195,"./views/forecast.jsx":196,"react":190,"react-router":31}],193:[function(require,module,exports){
+},{"./views/app.jsx":194,"./views/forecast.jsx":195,"react":190,"react-router":31}],193:[function(require,module,exports){
 /*-------------------------------------------------------------------------------------------------------------------*\
 |  Copyright (C) 2015 PayPal                                                                                          |
 |                                                                                                                     |
@@ -21155,30 +21155,7 @@ module.exports = React.createClass({displayName: "exports",
 });
 
 
-},{"./layout.jsx":197,"react":190}],194:[function(require,module,exports){
-'use strict';
-
-var React = require('react');
-
-module.exports = React.createClass({
-
-  displayName: 'account',
-
-  render: function render() {
-
-    return (
-      React.createElement("div", {id: "account"}, 
-        React.createElement("h1", null, this.props.name), 
-        React.createElement("h6", null, "I am a React Router rendered view"), 
-        React.createElement("a", {href: "/some_unknown"}, "Click to go to an unhandled route"), 
-        React.createElement("a", {href: "/test/3"}, "Test")
-      )
-    );
-  }
-});
-
-
-},{"react":190}],195:[function(require,module,exports){
+},{"./layout.jsx":196,"react":190}],194:[function(require,module,exports){
 'use strict';
 
 var Layout = require('./layout.jsx');
@@ -21198,29 +21175,27 @@ module.exports = React.createClass({displayName: "exports",
 });
 
 
-},{"./layout.jsx":197,"react":190,"react-router":31}],196:[function(require,module,exports){
+},{"./layout.jsx":196,"react":190,"react-router":31}],195:[function(require,module,exports){
 /* eslint-env node */
 
 'use strict';
 
 var React = require('react');
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+    displayName: 'forecast',
     render: function render() {
-
         return (
-            React.createElement("div", {id: "account"}, 
-            React.createElement("h1", null, this.props.name, " - ", this.props.location), 
-            React.createElement("h6", null, "I am a React Router rendered view"), 
-            React.createElement("a", {href: "/some_unknown"}, "Click to go to an unhandled route"), 
-            React.createElement("a", {href: "/test/4"}, "Test")
+            React.createElement("div", {className: "forecast"}, 
+                React.createElement("h1", null, this.props.name, " - ", this.props.location), 
+                React.createElement("h6", null, "I am a React Router rendered view")
             )
         );
     }
 });
 
 
-},{"react":190}],197:[function(require,module,exports){
+},{"react":190}],196:[function(require,module,exports){
 /*-------------------------------------------------------------------------------------------------------------------*\
 |  Copyright (C) 2015 PayPal                                                                                          |
 |                                                                                                                     |
