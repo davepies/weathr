@@ -1,20 +1,38 @@
 /* eslint-env node */
-/* global describe, it */
+/* global describe, it, before, after */
 
 'use strict';
 
-var request = require('supertest');
+var http = require('http');
+var Browser = require('zombie');
+
 var app = require('../../');
+
+var PORT = 3000;
 
 describe('weather reports', function () {
 
+    var server = null;
+    var browser = new Browser({ site: 'http://localhost:' + PORT });
+
+    // no console logs from browser
+    browser.silent = true;
+
+    before(function () {
+        server = http.createServer(app).listen(PORT);
+    });
+
+    after(function (done) {
+        server.close(done);
+    });
+
     describe('display a weather forecast by location', function () {
-        describe('requesting a valid location', function () {
-            it('responds to /weather/:location', function (done) {
-                request(app)
-                    .get('/weather/sydney')
-                    .expect(200, done);
-            });
+        before(function (done) {
+            browser.visit('/weather/sydney', done);
+        });
+
+        it('is a success', function () {
+            browser.assert.success();
         });
     });
 
