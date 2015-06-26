@@ -4,7 +4,7 @@
   "description": "Coding challange for tcog",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/**",
+    "test": "mocha ./{test,app}/**/*-test.js",
     "start": "npm run browserify && node index.js",
     "watch": "npm run browserify && nodemon index.js",
     "browserify": "browserify -t reactify -t require-globify public/index.js -o public/bundle.js"
@@ -25,6 +25,7 @@
     "reactify": "^1.1.0",
     "require-globify": "^1.1.0",
     "rewire": "^2.3.4",
+    "sinon": "^1.15.3",
     "supertest": "^1.0.1",
     "zombie": "^4.0.13"
   },

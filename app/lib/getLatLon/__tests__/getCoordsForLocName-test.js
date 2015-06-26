@@ -15,7 +15,7 @@ describe('Get an array containing the lat/lon of a given location', function () 
     var getCoordsForLocName = null;
 
     beforeEach(function () {
-        getCoordsForLocName = rewire('../getCoordsForLocName');
+        getCoordsForLocName = rewire('../');
         getCoordsForLocName.__set__('request', getRequestStub());
     });
 
