@@ -6,6 +6,7 @@
 
 var express = require('express');
 var app = module.exports = express();
+var server = null;
 
 //Temp
 var getLatLon = require('./app/middlewares/getLatLon');
@@ -47,9 +48,11 @@ app.use(function (err, req, res, next) {
 // Start Server
 // ======================================================================
 
-var server = app.listen(3000, function () {
-    var host = server.address().address;
-    var port = server.address().port;
+if (!module.parent) {
+    server = app.listen(3000, function () {
+        var host = server.address().address;
+        var port = server.address().port;
 
-    console.log('Listening on http://%s:%s', host, port);
-});
+        console.log('Listening on http://%s:%s', host, port);
+    });
+}
