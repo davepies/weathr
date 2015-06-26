@@ -20,12 +20,13 @@
   },
   "homepage": "https://github.com/davepies/weathr",
   "devDependencies": {
-    "mocha": "^2.2.5",
-    "supertest": "^1.0.1",
     "browserify": "^9.0.4",
-    "require-globify": "^1.1.0",
+    "mocha": "^2.2.5",
     "reactify": "^1.1.0",
-    "rewire": "^2.3.4"
+    "require-globify": "^1.1.0",
+    "rewire": "^2.3.4",
+    "supertest": "^1.0.1",
+    "zombie": "^4.0.13"
   },
   "dependencies": {
     "express": "^4.12.4",
