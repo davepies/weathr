@@ -2,18 +2,31 @@
 
 'use strict';
 
+var getForecastForLocation = require('../../lib/getForecastForLocation');
+
 module.exports = function (req, res, next) {
+
+    var forecastAPIKey;
 
     if (!req.latLon) {
         return next(new Error('req.latLon is not present'));
     }
 
-    if (!req.app.get('forecastAPIKey')) {
+    forecastAPIKey = req.app.get('forecastAPIKey');
+
+    if (!forecastAPIKey) {
         return next(new Error('apikey has not been set.'));
     }
 
-    req.forecast = {};
+    getForecastForLocation(forecastAPIKey, req.latLon, function (err, forecast) {
+        if (err) {
+            return next(err);
+        }
 
-    next();
+        req.forecast = forecast;
+
+        next();
+
+    });
 
 };
