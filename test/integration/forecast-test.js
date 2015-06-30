@@ -15,6 +15,8 @@ describe('App: Weather Forecasts', function () {
     var server = null;
     var browser = new Browser({ site: 'http://localhost:' + PORT });
 
+    this.timeout(99999999);
+
     // no console logs from browser
     browser.silent = true;
 
@@ -26,9 +28,9 @@ describe('App: Weather Forecasts', function () {
         server.close(done);
     });
 
-    describe('display a weather forecast by location', function () {
-        before(function (done) {
-            browser.visit('/weather/sydney', done);
+    describe('displays a weather forecast by location', function () {
+        before(function () {
+            return browser.visit('/weather/sydney');
         });
 
         it('is a success', function () {
