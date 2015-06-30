@@ -11,7 +11,7 @@ var sinon = require('sinon');
 
 // Tests ======================================================================
 
-describe('Get an array containing the lat/lon of a given location', function () {
+describe('Lib: getCoordsForLocName', function () {
     var getCoordsForLocName = null;
 
     beforeEach(function () {

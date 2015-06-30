@@ -10,7 +10,7 @@ var app = require('../../');
 
 var PORT = 3000;
 
-describe('weather reports', function () {
+describe('App: Weather Forecasts', function () {
 
     var server = null;
     var browser = new Browser({ site: 'http://localhost:' + PORT });
