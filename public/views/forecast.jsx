@@ -9,8 +9,9 @@ module.exports = React.createClass({
     render: function render() {
         return (
             <div className='forecast'>
-                <h1>{this.props.name} - {this.props.location}</h1>
-                <h6>I am a React Router rendered view</h6>
+                <h1>Forecast for: {this.props.location}</h1>
+                <h2>Summary</h2>
+                <p>{this.props.forecast.summary}</p>
             </div>
         );
     }
