@@ -2,7 +2,7 @@
 
 'use strict';
 
-var getForecastForLocation = require('../../lib/getForecastForLocation');
+var getForecastForLocation = require('../../lib/getForecast');
 
 module.exports = function (req, res, next) {
 

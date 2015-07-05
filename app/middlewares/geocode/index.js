@@ -2,7 +2,7 @@
 
 'use strict';
 
-var getLatLon = require('../../lib/getLatLonForLocation');
+var getLatLon = require('../../lib/getLatLon');
 
 module.exports = function (req, res, next) {
     getLatLon(req.params.location, function (err, latLon) {
