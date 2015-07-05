@@ -1,47 +1,24 @@
 /* eslint-env node */
+
 'use strict';
 
-// Dependencies
+// dependencies
 // ======================================================================
 
 var express = require('express');
-var app = module.exports = express();
+var app = express();
 var server = null;
 
-//Temp
-var getLatLon = require('./app/middlewares/getLatLon');
-var getForecast = require('./app/middlewares/getForecast');
-
-// Express Set Up
+// express set up
 // ======================================================================
 
 require('./config')(app);
 
-// Routes
+// routes
 // ======================================================================
 
-app.get('/weather/:location',
-    getLatLon,
-    getForecast,
-    function (req, res, next) {
-
-        var locationName = req.params.location.charAt(0).toUpperCase() + req.params.location.slice(1);
-
-        res.format({
-            'application/json': function () {
-                res.send(req.forecast);
-            },
-            'text/html': function () {
-                res.render(req.url, {
-                    title: 'Weather forecast for: ' + locationName,
-                    location: locationName,
-                    forecast: req.forecast
-                });
-            }
-        });
-
-    }
-);
+// forecast
+app.use('/weather', require('./app/routes/forecast'));
 
 // 400
 app.use(function (req, res) {
@@ -52,13 +29,13 @@ app.use(function (req, res) {
         });
 });
 
-// Error Handling
+// error handling
 app.use(function (err, req, res, next) {
     console.log(err.stack);
     res.status(500).send('Error ' + err.message);
 });
 
-// Start Server
+// start server
 // ======================================================================
 
 if (!module.parent) {
@@ -69,3 +46,9 @@ if (!module.parent) {
         console.log('Listening on http://%s:%s', host, port);
     });
 }
+
+// exports
+// ======================================================================
+
+module.exports = app;
+

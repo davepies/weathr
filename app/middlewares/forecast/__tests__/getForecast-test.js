@@ -14,7 +14,7 @@ var rewire = require('rewire');
 // Tests
 // ======================================================================
 
-describe('Middleware: getForecast', function () {
+describe('Middleware: forecast', function () {
 
     var req = null;
     var getForecastMiddleWare = null;

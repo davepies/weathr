@@ -3,7 +3,7 @@
 
 'use strict';
 
-describe('Lib: getForecastForLocation', function () {
+describe('Lib: getForecast', function () {
 
     it('handles errors');
     it('it returns a forecast');
