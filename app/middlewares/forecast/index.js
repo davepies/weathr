@@ -2,31 +2,52 @@
 
 'use strict';
 
+// Dependen
+// ======================================================================
+
 var getForecastForLocation = require('../../lib/getForecast');
 
-module.exports = function (req, res, next) {
+var FORECAST_TYPES = [ 'weekly', 'today', 'weekday' ];
 
-    var forecastAPIKey;
+// Middleware
+// ======================================================================
 
-    if (!req.latLon) {
-        return next(new Error('req.latLon is not present'));
-    }
+function forecastMiddlware(forecastType) {
 
-    forecastAPIKey = req.app.get('forecastAPIKey');
+    return function (req, res, next) {
+        var forecastAPIKey;
 
-    if (!forecastAPIKey) {
-        return next(new Error('apikey has not been set.'));
-    }
-
-    getForecastForLocation(forecastAPIKey, req.latLon, function (err, forecast) {
-        if (err) {
-            return next(err);
+        if (!req.latLon) {
+            return next(new Error('req.latLon is not present'));
         }
 
-        req.forecast = forecast;
+        forecastAPIKey = req.app.get('forecastAPIKey');
 
-        next();
+        if (!forecastAPIKey) {
+            return next(new Error('apikey has not been set.'));
+        }
 
-    });
+        getForecastForLocation(forecastAPIKey, req.latLon, function (err, forecastData) {
+            if (err) {
+                return next(err);
+            }
 
-};
+            req.forecast = {
+                type: forecastType,
+                data: forecastData
+            };
+
+            next();
+        });
+
+    };
+}
+
+// Exports
+// ======================================================================
+
+module.exports.forecastTypes = FORECAST_TYPES;
+
+FORECAST_TYPES.forEach(function (type) {
+    module.exports[type] = forecastMiddlware(type);
+});

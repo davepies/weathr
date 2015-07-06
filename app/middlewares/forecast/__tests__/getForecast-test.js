@@ -17,12 +17,12 @@ var rewire = require('rewire');
 describe('Middleware: forecast', function () {
 
     var req = null;
-    var getForecastMiddleWare = null;
+    var forecast = null;
 
     beforeEach(function () {
         // rewire the middleware
-        getForecastMiddleWare = rewire('../');
-        getForecastMiddleWare.__set__('getForecastForLocation', getForecastForLocationStub());
+        forecast = rewire('../');
+        forecast.__set__('getForecastForLocation', getForecastForLocationStub());
 
         req = {
             latLon: [1, 2],
@@ -36,7 +36,7 @@ describe('Middleware: forecast', function () {
 
     describe('error handling', function () {
         it('req.latLon is not present', function (done) {
-            getForecastMiddleWare({}, null, function (err) {
+            forecast.weekly({}, null, function (err) {
                 assert(err, 'no error has been passed on');
                 done();
             });
@@ -44,7 +44,7 @@ describe('Middleware: forecast', function () {
 
         it('API key has not been set', function (done) {
             req.app.get = function () {};
-            getForecastMiddleWare(req, null, function (err) {
+            forecast.weekly(req, null, function (err) {
                 assert(err, 'no error has been passed on');
                 done();
             });
@@ -53,13 +53,27 @@ describe('Middleware: forecast', function () {
 
     describe('everything is valid', function () {
         it('assigns an object to req.forecast', function (done) {
-            getForecastMiddleWare(req, {}, function (err) {
+            forecast.weekly(req, {}, function (err) {
                 if (err) {
                     throw err;
                 }
                 assert(req.forecast);
                 assert.equal(typeof req.forecast, 'object');
                 done();
+            });
+        });
+        it('adds the right type forecast type to req.forecast', function (done) {
+            forecast.forecastTypes.forEach(function (forecastType, i) {
+                forecast[forecastType](req, {}, function (err) {
+                    if (err) {
+                        throw err;
+                    }
+                    assert.equal(req.forecast.type, forecastType);
+
+                    if (i === forecast.forecastTypes.length - 1) {
+                        done();
+                    }
+                });
             });
         });
     });

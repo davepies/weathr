@@ -6,7 +6,7 @@
 // ======================================================================
 
 var express = require('express');
-var app = express();
+var app = module.exports = express();
 var server = null;
 
 // express set up
@@ -46,9 +46,3 @@ if (!module.parent) {
         console.log('Listening on http://%s:%s', host, port);
     });
 }
-
-// exports
-// ======================================================================
-
-module.exports = app;
-
