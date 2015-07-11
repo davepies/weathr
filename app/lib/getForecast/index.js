@@ -9,8 +9,9 @@ var assert = require('assert');
 
 var request = require('request');
 var R = require('ramda');
+var Cache = require('node-cache');
 
-// defaults
+// Defaults
 // ======================================================================
 
 var defaults = {
@@ -18,7 +19,10 @@ var defaults = {
     units: 'si'
 };
 
-// private
+// cache - stdTTL (ttl in seconds)
+var cache = new Cache({ stdTTL: 60 * 10 });
+
+// Private
 // ======================================================================
 
 function requestForecast(url, callback) {
@@ -40,16 +44,38 @@ function requestForecast(url, callback) {
             return callback(e);
         }
 
-        callback(null, R.path(['daily'], forecastObj));
+        callback(null, forecastObj);
     });
 }
 
+function getForecastData(url, callback) {
 
-// public
+    var dataPath = R.path(['daily']);
+
+    cache.get(url, function (err, data) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (data) {
+            return callback(null, dataPath(data));
+        }
+
+        // request if url hasn't been cached
+        requestForecast(url, function (err, data) {
+            if (err) {
+                return callback(err);
+            }
+            cache.set(url, data);
+            callback(null, dataPath(data));
+        });
+    });
+}
+
+// Public
 // ======================================================================
 
 function getForecastForLocation(apiKey, locationCoords, options, callback) {
-
     var requestUrl, config;
 
     // options are, well, optional
@@ -74,11 +100,10 @@ function getForecastForLocation(apiKey, locationCoords, options, callback) {
         '?units=', config.units
     ].join('');
 
-    requestForecast(requestUrl, callback);
-
+    getForecastData(requestUrl, callback);
 }
 
-// exports
+// Exports
 // ======================================================================
 
 module.exports = getForecastForLocation;
