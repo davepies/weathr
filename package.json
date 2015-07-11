@@ -6,7 +6,7 @@
   "scripts": {
     "test:unit": "mocha ./app/**/*-test.js",
     "test:integration": "mocha ./test/**/*-test.js",
-    "test": "npm run test:unit && test:integration",
+    "test": "npm run test:unit && npm run test:integration",
     "open:browser": "(sleep 4 && open http://localhost:3000/weather/sydney) &",
     "start": "npm run browserify && npm run open:browser && node index.js",
     "watch": "npm run browserify && npm run open:browser && nodemon index.js",
