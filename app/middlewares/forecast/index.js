@@ -5,6 +5,7 @@
 // Dependencies
 // ======================================================================
 
+var moment = require('moment');
 var R = require('ramda');
 
 var getForecast = require('../../lib/getForecast');
@@ -12,10 +13,18 @@ var getForecast = require('../../lib/getForecast');
 // Filters
 // ======================================================================
 
+var isSameDay = function (weekday, day) {
+    return moment.unix(day.time).isSame(moment().day(weekday), 'day');
+};
+
 var filters = {
     weekly: R.path(['daily']),
-    today: R.path(['daily']),
-    weekday: R.path(['daily'])
+    weekday: function (forecastData, weekday) {
+        var data = R.path(['daily', 'data'], forecastData);
+        return R.find(R.partial(isSameDay, weekday), data);
+    },
+    today: function (forecastData) {
+    }
 };
 
 
@@ -25,7 +34,7 @@ var filters = {
 function forecastMiddlware(forecastType) {
 
     return function (req, res, next) {
-        var forecastAPIKey;
+        var forecastAPIKey, weekday;
 
         if (!req.latLon) {
             return next(new Error('req.latLon is not present'));
@@ -37,6 +46,8 @@ function forecastMiddlware(forecastType) {
             return next(new Error('apikey has not been set.'));
         }
 
+        weekday = req.params.weekday;
+
         getForecast(forecastAPIKey, req.latLon, function (err, forecastData) {
             if (err) {
                 return next(err);
@@ -44,7 +55,7 @@ function forecastMiddlware(forecastType) {
 
             req.forecast = {
                 type: forecastType,
-                data: filters.weekly(forecastData)
+                data: filters[forecastType](forecastData, weekday)
             };
 
             next();
