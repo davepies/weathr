@@ -20,7 +20,7 @@ var defaults = {
 };
 
 // cache - stdTTL (ttl in seconds)
-var cache = new Cache({ stdTTL: 60 * 10 });
+var forecastCache = new Cache({ stdTTL: 60 * 10 });
 
 // Private
 // ======================================================================
@@ -50,32 +50,26 @@ function requestForecast(url, callback) {
 
 function getForecastData(url, callback) {
 
-    var dataPath = R.path(['daily']);
+    var cachedData = forecastCache.get(url);
 
-    cache.get(url, function (err, data) {
+    if (cachedData) {
+        return callback(null, cachedData);
+    }
+
+    // request if url hasn't been cached
+    requestForecast(url, function (err, responseData) {
         if (err) {
             return callback(err);
         }
-
-        if (data) {
-            return callback(null, dataPath(data));
-        }
-
-        // request if url hasn't been cached
-        requestForecast(url, function (err, data) {
-            if (err) {
-                return callback(err);
-            }
-            cache.set(url, data);
-            callback(null, dataPath(data));
-        });
+        forecastCache.set(url, responseData);
+        callback(null, responseData);
     });
 }
 
 // Public
 // ======================================================================
 
-function getForecastForLocation(apiKey, locationCoords, options, callback) {
+function getForecast(apiKey, locationCoords, options, callback) {
     var requestUrl, config;
 
     // options are, well, optional
@@ -106,4 +100,4 @@ function getForecastForLocation(apiKey, locationCoords, options, callback) {
 // Exports
 // ======================================================================
 
-module.exports = getForecastForLocation;
+module.exports = getForecast;

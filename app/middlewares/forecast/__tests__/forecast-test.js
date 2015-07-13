@@ -22,7 +22,7 @@ describe('Middleware: forecast', function () {
     beforeEach(function () {
         // rewire the middleware
         forecast = rewire('../');
-        forecast.__set__('getForecastForLocation', getForecastForLocationStub());
+        forecast.__set__('getForecast', getForecastStub());
 
         req = {
             latLon: [1, 2],
@@ -83,7 +83,7 @@ describe('Middleware: forecast', function () {
 // Helpers
 // ======================================================================
 
-function getForecastForLocationStub() {
+function getForecastStub() {
     var payload = {};
     return function (apiKey, locationCoords, callback) {
         // make async

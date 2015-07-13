@@ -2,12 +2,22 @@
 
 'use strict';
 
-// Dependen
+// Dependencies
 // ======================================================================
 
-var getForecastForLocation = require('../../lib/getForecast');
+var R = require('ramda');
 
-var FORECAST_TYPES = [ 'weekly', 'today', 'weekday' ];
+var getForecast = require('../../lib/getForecast');
+
+// Filters
+// ======================================================================
+
+var filters = {
+    weekly: R.path(['daily']),
+    today: R.path(['daily']),
+    weekday: R.path(['daily'])
+};
+
 
 // Middleware
 // ======================================================================
@@ -27,14 +37,14 @@ function forecastMiddlware(forecastType) {
             return next(new Error('apikey has not been set.'));
         }
 
-        getForecastForLocation(forecastAPIKey, req.latLon, function (err, forecastData) {
+        getForecast(forecastAPIKey, req.latLon, function (err, forecastData) {
             if (err) {
                 return next(err);
             }
 
             req.forecast = {
                 type: forecastType,
-                data: forecastData
+                data: filters.weekly(forecastData)
             };
 
             next();
@@ -46,8 +56,8 @@ function forecastMiddlware(forecastType) {
 // Exports
 // ======================================================================
 
-module.exports.forecastTypes = FORECAST_TYPES;
+module.exports.forecastTypes = Object.keys(filters);
 
-FORECAST_TYPES.forEach(function (type) {
+Object.keys(filters).forEach(function (type) {
     module.exports[type] = forecastMiddlware(type);
 });
