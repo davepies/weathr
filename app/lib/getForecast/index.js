@@ -94,14 +94,13 @@ function getForecast(apiKey, locationCoords, options, callback) {
     }
 
     // build url
+    // eg.: https://api.forecast.io/forecast/<APIKEY>/<LAT>,<LON>,<TIME>?units=si
     requestUrl = [
         config.endpoint,
         apiKey, '/',
         forecastParams.join(),
         '?units=', config.units
     ].join('');
-
-    console.log('Url: ', requestUrl);
 
     getForecastData(requestUrl, callback);
 }
