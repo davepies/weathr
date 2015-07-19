@@ -5,11 +5,11 @@
 var React = require('react');
 
 module.exports = React.createClass({
-    displayName: 'forecast',
+    displayName: 'forecastDaily',
     render: function render() {
         return (
             <div className='forecast'>
-                <h1>Forecast ({this.props.forecast.type}) for: {this.props.location}</h1>
+                <h1>Daily forecast for: {this.props.location}</h1>
                 <h2>Summary</h2>
                 <p>{this.props.forecast.data.summary}</p>
             </div>

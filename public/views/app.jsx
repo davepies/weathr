@@ -1,3 +1,4 @@
+/* eslint-env node */
 'use strict';
 
 var Layout = require('./layout.jsx');
@@ -7,11 +8,11 @@ var Router = require('react-router');
 module.exports = React.createClass({
 
   render: function render() {
-
-    return (
-      <Layout {...this.props}>
-        <Router.RouteHandler {...this.props}/>
-      </Layout>
-    );
+      return (
+          <Layout {...this.props}>
+          <Router.RouteHandler {...this.props}/>
+          </Layout>
+      );
   }
+
 });
