@@ -6,35 +6,36 @@
 // ======================================================================
 
 var moment = require('moment');
-var R = require('ramda');
-
 var getForecast = require('../../lib/getForecast');
 
-// Filters
+// Private
 // ======================================================================
 
-var isSameDay = function (weekday, day) {
-    return moment.unix(day.time).isSame(moment().day(weekday), 'day');
-};
+var forecastTypes = ['weekly', 'weekday', 'today'];
 
-var filters = {
-    weekly: R.path(['daily']),
-    weekday: function (forecastData, weekday) {
-        var data = R.path(['daily', 'data'], forecastData);
-        return R.find(R.partial(isSameDay, weekday), data);
-    },
-    today: function (forecastData) {
+function getForecastTime(forecastType, weekday) {
+    var forecastTime;
+
+    switch (forecastType) {
+        case 'weekday':
+            forecastTime = moment().day(weekday);
+            break;
+        case 'today':
+            forecastTime = moment().day('today');
+            break;
+        default:
+            return false;
     }
-};
 
+    return forecastTime.startOf('day').format();
+}
 
 // Middleware
 // ======================================================================
 
 function forecastMiddlware(forecastType) {
-
     return function (req, res, next) {
-        var forecastAPIKey, weekday;
+        var forecastAPIKey, forecastTime;
 
         if (!req.latLon) {
             return next(new Error('req.latLon is not present'));
@@ -46,20 +47,25 @@ function forecastMiddlware(forecastType) {
             return next(new Error('apikey has not been set.'));
         }
 
-        weekday = req.params.weekday;
+        forecastTime = getForecastTime(forecastType, req.params.weekday);
 
-        getForecast(forecastAPIKey, req.latLon, function (err, forecastData) {
-            if (err) {
-                return next(err);
+        getForecast(
+            forecastAPIKey,
+            req.latLon,
+            { forecastTime: forecastTime },
+            function (err, forecastData) {
+                if (err) {
+                    return next(err);
+                }
+
+                req.forecast = {
+                    type: forecastType,
+                    data: forecastData
+                };
+
+                next();
             }
-
-            req.forecast = {
-                type: forecastType,
-                data: filters[forecastType](forecastData, weekday)
-            };
-
-            next();
-        });
+        );
 
     };
 }
@@ -67,8 +73,8 @@ function forecastMiddlware(forecastType) {
 // Exports
 // ======================================================================
 
-module.exports.forecastTypes = Object.keys(filters);
+module.exports.forecastTypes = forecastTypes;
 
-Object.keys(filters).forEach(function (type) {
+forecastTypes.forEach(function (type) {
     module.exports[type] = forecastMiddlware(type);
 });

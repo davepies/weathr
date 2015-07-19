@@ -70,15 +70,15 @@ function getForecastData(url, callback) {
 // ======================================================================
 
 function getForecast(apiKey, locationCoords, options, callback) {
-    var requestUrl, config;
+    var requestUrl, forecastParams, config;
 
     // options are, well, optional
     if (R.is(Function, options)) {
         callback = options;
-        config = {};
+        options = {};
     }
 
-    config = R.merge(defaults, config);
+    config = R.merge(defaults, options);
 
     // make sure everything we need has been passed in
     assert(apiKey, 'no apiKey has been provided.');
@@ -86,13 +86,22 @@ function getForecast(apiKey, locationCoords, options, callback) {
     assert(R.is(Array, locationCoords), 'location coordinates is not an array.');
     assert(R.is(Function, callback), 'callback is not a function.');
 
+    forecastParams = locationCoords;
+
+    // append forecast time to params
+    if (options.forecastTime) {
+        forecastParams.push(config.forecastTime);
+    }
+
     // build url
     requestUrl = [
         config.endpoint,
         apiKey, '/',
-        locationCoords.join(),
+        forecastParams.join(),
         '?units=', config.units
     ].join('');
+
+    console.log('Url: ', requestUrl);
 
     getForecastData(requestUrl, callback);
 }

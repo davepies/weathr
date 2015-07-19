@@ -25,6 +25,9 @@ describe('Middleware: forecast', function () {
         forecast.__set__('getForecast', getForecastStub());
 
         req = {
+            params: {
+                weekday: false
+            },
             latLon: [1, 2],
             app: {
                 get: function () {
@@ -85,7 +88,11 @@ describe('Middleware: forecast', function () {
 
 function getForecastStub() {
     var payload = {};
-    return function (apiKey, locationCoords, callback) {
+    return function (apiKey, locationCoords, options, callback) {
+        if (typeof options === 'function') {
+            callback = options;
+            options = {};
+        }
         // make async
         process.nextTick(callback.bind(null, null, payload));
     };
