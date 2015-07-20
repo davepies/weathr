@@ -1,4 +1,5 @@
 /* eslint-env node */
+
 'use strict';
 
 var Routes = require('./routes.jsx');
